@@ -79,7 +79,10 @@ anchor build
 ## Running Tests
 
 ```bash
-anchor test
+surfpool start
+```
+```bash
+anchor test --skip-local-validator --skip-deploy
 ```
 
 Expected output:
