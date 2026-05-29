@@ -1,0 +1,15 @@
+[2026-05-29--17-15-12 INFO actix_server::builder] starting 5 workers
+[2026-05-29--17-15-12 INFO actix_server::server] Tokio runtime found; starting in existing Tokio runtime
+[2026-05-29--17-15-12 INFO actix_server::server] starting service: "actix-web-service-127.0.0.1:18488", workers: 5, listening on: 127.0.0.1:18488
+[2026-05-29--17-15-12 INFO parity_ws] Listening for new connections on 127.0.0.1:8900.
+[2026-05-29--17-15-14 INFO txtx::svm::deploy_program] [Recovery Instructions] - An ephemeral authority account will be created and funded to write to the buffer account.
+[2026-05-29--17-15-14 INFO txtx::svm::deploy_program] [Recovery Instructions] - Please save the following information in case the deployment fails and the account needs to be recovered:
+[2026-05-29--17-15-14 INFO txtx::svm::deploy_program] [Recovery Instructions] - Ephemeral authority public key: 45sa9zcSUhuMcgSiaYpgBAGpaiopiuUka4AUmmUB86i1
+[2026-05-29--17-15-14 INFO txtx::svm::deploy_program] [Recovery Instructions] - Ephemeral authority secret key: [189, 174, 137, 224, 121, 20, 138, 151, 100, 173, 251, 247, 94, 231, 86, 30, 94, 199, 204, 3, 203, 205, 149, 96, 158, 210, 243, 147, 234, 46, 216, 230, 45, 210, 144, 199, 222, 169, 24, 6, 103, 153, 154, 45, 196, 245, 171, 236, 234, 212, 122, 106, 102, 177, 252, 118, 136, 137, 129, 169, 98, 194, 214, 150]
+[2026-05-29--17-15-14 INFO txtx::svm::deploy_program] Account Created - Ephemeral authority account created and funded to write to buffer
+[2026-05-29--17-15-14 INFO txtx::svm::deploy_program] [Recovery Instructions] - Creating program buffer account at pubkey 5YLu6HHuFP9DUY559prZmXxDuJSarncWfj8Ww7BpwhZs
+[2026-05-29--17-15-14 INFO txtx::svm::deploy_program] Account Created - Program buffer account created
+[2026-05-29--17-15-20 INFO parity_ws::io] Accepted a new tcp connection from 127.0.0.1:63035.
+[2026-05-29--17-15-23 INFO txtx::svm::deploy_program] Buffer Ready - Writing to buffer account is complete
+[2026-05-29--17-15-24 INFO txtx::svm::deploy_program] Program Created - Program 9fGZzouDA77HFRAWTd1Kq1WV7BPW891D4eGUvUatPvq2 has been deployed
+[2026-05-29--17-15-25 INFO txtx::svm::deploy_program] Complete - Ephemeral authority account closed and leftover funds returned to payer
