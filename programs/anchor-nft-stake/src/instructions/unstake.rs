@@ -87,7 +87,6 @@ pub fn unstake(ctx: Context<Unstake>) -> Result<()> {
     let config = &ctx.accounts.config;
     let stake  = &ctx.accounts.stake_account;
 
-    // 1. Enforce freeze period
     let elapsed = clock
         .unix_timestamp
         .checked_sub(stake.staked_at)
@@ -98,7 +97,6 @@ pub fn unstake(ctx: Context<Unstake>) -> Result<()> {
         StakingError::FreezePeriodNotPassed
     );
 
-    // 2. Auto-claim pending rewards before unstaking
     let elapsed_days = elapsed / 86_400;
     if elapsed_days > 0 {
         let rewards = (elapsed_days as u64)
@@ -129,7 +127,6 @@ pub fn unstake(ctx: Context<Unstake>) -> Result<()> {
             .saturating_add(elapsed_days as u32);
     }
 
-    // 3. Thaw: set frozen = false — stake PDA signs as FreezeDelegate authority
     let asset_key  = ctx.accounts.asset.key();
     let config_key = config.key();
     let stake_bump = stake.bump;
@@ -150,9 +147,6 @@ pub fn unstake(ctx: Context<Unstake>) -> Result<()> {
         .plugin(Plugin::FreezeDelegate(FreezeDelegate { frozen: false }))
         .invoke_signed(stake_signer_seeds)?;
 
-    // 4. Remove FreezeDelegate — owner signs (not the stake PDA)
-    // After unfreezing, the owner can remove the plugin directly
-    // The stake PDA was the delegate authority but owner is the asset authority
     RemovePluginV1CpiBuilder::new(&ctx.accounts.mpl_core_program.to_account_info())
         .asset(&ctx.accounts.asset.to_account_info())
         .collection(Some(&ctx.accounts.collection.to_account_info()))
@@ -162,10 +156,8 @@ pub fn unstake(ctx: Context<Unstake>) -> Result<()> {
         .plugin_type(PluginType::FreezeDelegate)
         .invoke()?;
 
-    // 5. Decrement collection staked_count
     update_collection_count(&ctx)?;
 
-    // 6. Decrement user staked counter
     ctx.accounts.user_account.amount_staked =
         ctx.accounts.user_account.amount_staked.saturating_sub(1);
 

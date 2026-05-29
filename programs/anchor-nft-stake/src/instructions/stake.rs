@@ -69,18 +69,15 @@ pub struct Stake<'info> {
 }
 
 pub fn stake(ctx: Context<Stake>) -> Result<()> {
-    // 1. Record stake
     let stake = &mut ctx.accounts.stake_account;
     stake.owner     = ctx.accounts.owner.key();
     stake.mint      = ctx.accounts.asset.key();
     stake.bump      = ctx.bumps.stake_account;
     stake.staked_at = Clock::get()?.unix_timestamp;
 
-    // 2. Increment user counter
     ctx.accounts.user_account.amount_staked =
         ctx.accounts.user_account.amount_staked.saturating_add(1);
 
-    // 3. Add FreezeDelegate to asset — owner signs, stake PDA is delegate
     AddPluginV1CpiBuilder::new(&ctx.accounts.mpl_core_program.to_account_info())
         .asset(&ctx.accounts.asset.to_account_info())
         .collection(Some(&ctx.accounts.collection.to_account_info()))
@@ -93,7 +90,6 @@ pub fn stake(ctx: Context<Stake>) -> Result<()> {
         })
         .invoke()?;
 
-    // 4. Update collection staked_count — uses collection-specific builders
     update_collection_count(&ctx, 1)?;
 
     Ok(())
@@ -105,16 +101,13 @@ fn update_collection_count(ctx: &Context<Stake>, delta: i64) -> Result<()> {
     let owner_info      = ctx.accounts.owner.to_account_info();
     let system_info     = ctx.accounts.system_program.to_account_info();
 
-    // Check if Attributes plugin already exists on the collection
     let plugin_exists = fetch_plugin::<BaseCollectionV1, Attributes>(
         &collection_info,
         PluginType::Attributes,
     ).is_ok();
 
     if plugin_exists {
-        // Use UpdateCollectionPluginV1 — NOT UpdatePluginV1
-        // UpdatePluginV1 is for assets only; using it on a collection
-        // causes "Error deserializing account"
+
         let (_, attrs, _) = fetch_plugin::<BaseCollectionV1, Attributes>(
             &collection_info,
             PluginType::Attributes,
@@ -142,8 +135,7 @@ fn update_collection_count(ctx: &Context<Stake>, delta: i64) -> Result<()> {
             }))
             .invoke()?;
     } else {
-        // Use AddCollectionPluginV1 — NOT AddPluginV1
-        // AddPluginV1 is for assets only
+
         AddCollectionPluginV1CpiBuilder::new(&mpl_info)
             .collection(&collection_info)
             .payer(&owner_info)
